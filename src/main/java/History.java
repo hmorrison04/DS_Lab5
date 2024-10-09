@@ -1,3 +1,4 @@
+import java.util.EmptyStackException;
 import java.util.Stack;
 public class History
 {
@@ -48,25 +49,35 @@ public class History
        Note that new actions should clear out events that can be "redone"
        note is a variable to the Notepad that called this function
      */
-   public void redoEvent(NotePad note)
+   public void redoEvent(NotePad note) 
    {
-
-	   Event reEvent = redoStack.pop();
-	   undoStack.push(reEvent);
-
-	   if(reEvent.deletion)
+	  
+	   if(hasReDoData() == false)
 	   {
-		   note.remove(reEvent.pos, reEvent.changeVal.length());
-		   undoStack.push(reEvent);
-		   redoStack.clear();
-	   } 
+		   return;
+	   }
 	   else 
 	   {
-		   note.insert(reEvent.pos, reEvent.changeVal);
-		   undoStack.push(reEvent);
-		   redoStack.clear();
-	   }
 	
+		   
+		   Event reEvent = redoStack.pop();
+		   undoStack.push(reEvent);
+		  
+		   if(reEvent.deletion)
+		   {
+			   note.remove(reEvent.pos, reEvent.changeVal.length());
+			   //undoStack.push(reEvent);
+			   //redoStack.clear();
+		   } 
+		   else 
+		   {
+			   note.insert(reEvent.pos, reEvent.changeVal);
+			  // undoStack.push(reEvent);
+			  //redoStack.clear();
+		   }
+	   }
+	   
+	   
    }
 
     /**
@@ -74,7 +85,7 @@ public class History
      */
    public boolean hasUndoData()
    {
-	   if(!undoStack.isEmpty())
+	   if(undoStack.isEmpty() == false)
 	   {
 		   return true;
 	   }
@@ -86,7 +97,7 @@ public class History
      */
    public boolean hasReDoData()
    {
-	   if(!redoStack.isEmpty())
+	   if(redoStack.isEmpty() == false)
 	   {
 		   return true;
 	   }
